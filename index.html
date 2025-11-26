@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POSLite - Simple, Fast & Modern POS</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top-hero">
+    <div class="brand">POSLite</div>
+    <div class="top-actions">
+      <button class="btn ghost" id="welcomeLoginBtn">Login</button>
+      <button class="btn primary" id="welcomeRegisterBtn">Register</button>
+    </div>
+  </header>
+
+  <!-- Welcome Screen -->
+  <section id="welcome-screen" class="welcome">
+    <div class="welcome-copy">
+      <p class="eyebrow">Point of Sale Web App</p>
+      <h1>Simple, Fast & Modern POS System for Learning & Small Business</h1>
+      <p class="subtitle">Kelola produk, transaksi, dan laporan secara ringan langsung dari browser. Dirancang ramah pemula dan siap dijadikan demo production.</p>
+      <div class="welcome-actions">
+        <button class="btn primary" id="ctaLoginBtn">Login</button>
+        <button class="btn secondary" id="ctaRegisterBtn">Register</button>
+      </div>
+      <div class="feature-pills">
+        <span class="pill">Register & Login</span>
+        <span class="pill">CRUD Produk</span>
+        <span class="pill">Cart & Checkout</span>
+        <span class="pill">Laporan</span>
+        <span class="pill">Fetch API</span>
+      </div>
+    </div>
+    <div class="welcome-panel">
+      <div class="panel-card">
+        <p class="eyebrow">Demo Flow</p>
+        <h3>Login → Tambah Produk → Tambah ke Cart → Checkout → Laporan</h3>
+        <p class="muted">Klik tombol Login atau Register untuk membuka dashboard. Semua data disimpan di localStorage agar tetap ada ketika halaman di-refresh.</p>
+        <div class="panel-stats">
+          <div>
+            <p class="label">Storage</p>
+            <strong>localStorage</strong>
+          </div>
+          <div>
+            <p class="label">Mode</p>
+            <strong>SPA</strong>
+          </div>
+          <div>
+            <p class="label">Status</p>
+            <strong>Ready</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Login Modal -->
+  <div id="login-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Access</p>
+          <h3>Login</h3>
+        </div>
+        <button class="icon-btn" data-close="login-modal">✕</button>
+      </div>
+      <form id="loginForm" class="form-vertical">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="you@example.com" required />
+        <label>Password</label>
+        <input type="password" name="password" placeholder="••••••" required />
+        <button type="submit" class="btn primary">Login</button>
+        <p class="muted center">Belum punya akun? <button type="button" class="link" id="loginToRegister">Register</button></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register Modal -->
+  <div id="register-modal" class="modal hidden">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Access</p>
+          <h3>Register</h3>
+        </div>
+        <button class="icon-btn" data-close="register-modal">✕</button>
+      </div>
+      <form id="registerForm" class="form-vertical">
+        <label>Full Name</label>
+        <input type="text" name="name" placeholder="Nama lengkap" required />
+        <label>Email</label>
+        <input type="email" name="email" placeholder="you@example.com" required />
+        <label>Password</label>
+        <input type="password" name="password" placeholder="Minimal 6 karakter" required />
+        <label>Confirm Password</label>
+        <input type="password" name="confirmPassword" placeholder="Ulangi password" required />
+        <button type="submit" class="btn primary">Register</button>
+        <p class="muted center">Sudah punya akun? <button type="button" class="link" id="registerToLogin">Login</button></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <section id="app-main" class="app hidden">
+    <header class="app-topbar">
+      <div class="brand">POSLite Dashboard</div>
+      <div class="topbar-user">
+        <span id="currentUserLabel">Guest</span>
+        <button class="btn ghost" id="logoutBtn">Logout</button>
+      </div>
+    </header>
+    <div class="app-body">
+      <aside class="sidebar">
+        <button class="nav-item active" data-view="overview">Overview</button>
+        <button class="nav-item" data-view="products">Products</button>
+        <button class="nav-item" data-view="cart">Cart & Checkout</button>
+        <button class="nav-item" data-view="reports">Reports</button>
+      </aside>
+      <div class="content">
+        <!-- Overview -->
+        <section class="view" id="view-overview">
+          <div class="section-header-inline">
+            <div>
+              <p class="eyebrow">Ringkasan</p>
+              <h2>Dashboard Overview</h2>
+            </div>
+            <button class="btn secondary" id="importSampleBtn">Import Produk Contoh</button>
+          </div>
+          <div class="stat-grid">
+            <div class="card stat">
+              <p class="label">Total Produk</p>
+              <h3 id="statProducts">0</h3>
+            </div>
+            <div class="card stat">
+              <p class="label">Total Transaksi</p>
+              <h3 id="statTransactions">0</h3>
+            </div>
+            <div class="card stat">
+              <p class="label">Total Omzet</p>
+              <h3 id="statRevenue">Rp0</h3>
+            </div>
+            <div class="card stat">
+              <p class="label">Data API</p>
+              <h3 id="statApi">-</h3>
+            </div>
+          </div>
+        </section>
+
+        <!-- Products -->
+        <section class="view hidden" id="view-products">
+          <div class="section-header-inline">
+            <div>
+              <p class="eyebrow">Produk</p>
+              <h2>Kelola Produk</h2>
+            </div>
+            <span class="badge">CRUD</span>
+          </div>
+          <form id="productForm" class="form-grid">
+            <input type="hidden" name="id" />
+            <input type="text" name="name" placeholder="Nama Produk" required />
+            <input type="text" name="category" placeholder="Kategori" />
+            <input type="number" name="price" placeholder="Harga" required />
+            <input type="number" name="stock" placeholder="Stok" required />
+            <div class="form-actions">
+              <button type="submit" class="btn primary">Simpan</button>
+              <button type="button" class="btn ghost" id="clearProductBtn">Bersihkan</button>
+            </div>
+          </form>
+          <div class="table-card">
+            <div class="table-head">
+              <h4>Daftar Produk</h4>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nama</th>
+                  <th>Kategori</th>
+                  <th>Harga</th>
+                  <th>Stok</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Cart -->
+        <section class="view hidden" id="view-cart">
+          <div class="section-header-inline">
+            <div>
+              <p class="eyebrow">Transaksi</p>
+              <h2>Cart & Checkout</h2>
+            </div>
+            <span class="badge">Live</span>
+          </div>
+          <form id="cartForm" class="form-grid small">
+            <select id="cartProductSelect" required>
+              <option value="">Pilih Produk</option>
+            </select>
+            <input type="number" id="cartQty" placeholder="Qty" min="1" value="1" />
+            <button type="submit" class="btn primary">Tambah ke Cart</button>
+          </form>
+          <div class="table-card">
+            <div class="table-head">
+              <h4>Keranjang</h4>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Produk</th>
+                  <th>Qty</th>
+                  <th>Harga</th>
+                  <th>Subtotal</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="cartTableBody"></tbody>
+            </table>
+            <div class="cart-summary">
+              <div>
+                <p class="label">Total Qty</p>
+                <h3 id="cartTotalQty">0</h3>
+              </div>
+              <div>
+                <p class="label">Total Harga</p>
+                <h3 id="cartTotalPrice">Rp0</h3>
+              </div>
+              <button class="btn secondary" id="checkoutBtn">Checkout</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Reports -->
+        <section class="view hidden" id="view-reports">
+          <div class="section-header-inline">
+            <div>
+              <p class="eyebrow">Laporan</p>
+              <h2>Riwayat Transaksi</h2>
+            </div>
+            <span class="badge ghost">History</span>
+          </div>
+          <div class="report-summary">
+            <div>
+              <p class="label">Total Transaksi</p>
+              <h3 id="reportTotalTransactions">0</h3>
+            </div>
+            <div>
+              <p class="label">Total Omzet</p>
+              <h3 id="reportTotalRevenue">Rp0</h3>
+            </div>
+          </div>
+          <div class="table-card">
+            <div class="table-head">
+              <h4>Transaksi Tersimpan</h4>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Item</th>
+                  <th>Total Qty</th>
+                  <th>Total Harga</th>
+                  <th>Tanggal</th>
+                </tr>
+              </thead>
+              <tbody id="reportTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <div id="notification" class="toast hidden"></div>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
