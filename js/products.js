@@ -12,6 +12,8 @@ export function initProductModule() {
   const productForm = document.getElementById('productForm');
   const editBtn = document.getElementById('editProductBtn');
   const deleteBtn = document.getElementById('deleteProductBtn');
+  const resetBtn = document.getElementById('resetProductBtn');
+  const productTable = document.getElementById('productTable');
 
   if (productForm) {
     productForm.addEventListener('submit', (event) => {
@@ -33,6 +35,23 @@ export function initProductModule() {
       deleteProduct('demo-id');
     });
   }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      console.log('resetProductBtn clicked');
+      renderProductTable();
+      UI.showToast('Form produk di-reset (dummy)', 'warning');
+    });
+  }
+
+  if (productTable) {
+    productTable.addEventListener('click', (event) => {
+      console.log('productTable clicked at cell:', event.target.tagName);
+      renderProductTable();
+    });
+  }
+
+  renderProductTable();
 }
 
 /**

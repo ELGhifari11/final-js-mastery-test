@@ -13,12 +13,14 @@ export function initTransactionModule() {
   const cartForm = document.getElementById('cartForm');
   const saveBtn = document.getElementById('saveTransactionBtn');
   const removeBtn = document.getElementById('removeCartItemBtn');
+  const clearBtn = document.getElementById('clearCartBtn');
 
   if (cartForm) {
     cartForm.addEventListener('submit', (event) => {
       event.preventDefault();
       const data = Object.fromEntries(new FormData(cartForm));
       addItemToCart(data.product, data.qty);
+      UI.showToast('Item ditambahkan ke cart (dummy)', 'success');
     });
   }
 
@@ -31,6 +33,15 @@ export function initTransactionModule() {
   if (removeBtn) {
     removeBtn.addEventListener('click', () => {
       removeItemFromCart('cart-item-id');
+    });
+  }
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      console.log('clearCartBtn clicked');
+      calculateCartTotals();
+      renderCart();
+      UI.showToast('Keranjang di-reset (dummy)', 'warning');
     });
   }
 }

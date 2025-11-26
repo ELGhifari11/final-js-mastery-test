@@ -11,6 +11,8 @@ export function initAuthListeners() {
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
   const logoutBtn = document.getElementById('logoutBtn');
+  const passwordForm = document.getElementById('passwordForm');
+  const refreshSessionBtn = document.getElementById('refreshSessionBtn');
 
   if (loginForm) {
     loginForm.addEventListener('submit', (event) => {
@@ -35,6 +37,24 @@ export function initAuthListeners() {
       handleLogout();
     });
   }
+
+  if (passwordForm) {
+    passwordForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(passwordForm));
+      console.log('passwordForm submitted:', data);
+      UI.showToast('Ganti password (dummy)', 'info');
+      UI.toggleAuthUI(isAuthenticated(), Storage.getCurrentUser());
+    });
+  }
+
+  if (refreshSessionBtn) {
+    refreshSessionBtn.addEventListener('click', () => {
+      console.log('refreshSessionBtn clicked');
+      UI.showToast('Session dicek ulang (dummy)', 'info');
+      UI.toggleAuthUI(isAuthenticated(), Storage.getCurrentUser());
+    });
+  }
 }
 
 /**
@@ -50,6 +70,9 @@ export function handleRegister(formData) {
   Storage.getUsers();
   Storage.saveUsers([]);
   UI.showToast('Register flow executed', 'success');
+  UI.toggleAuthUI(true, formData);
+  UI.setActiveTab('produk');
+  UI.toggleDemoAccess(true);
 }
 
 /**
@@ -65,6 +88,8 @@ export function handleLogin(formData) {
   Storage.getUsers();
   Storage.setCurrentUser(formData);
   UI.toggleAuthUI(true, formData);
+  UI.toggleDemoAccess(true);
+  UI.setActiveTab('produk');
   UI.showToast('Login flow executed', 'info');
 }
 
@@ -78,6 +103,8 @@ export function handleLogout() {
   // TODO
   Storage.clearCurrentUser();
   UI.toggleAuthUI(false, null);
+  UI.toggleDemoAccess(false);
+  UI.setActiveTab('produk');
   UI.showToast('Logout flow executed', 'info');
 }
 

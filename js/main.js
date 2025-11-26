@@ -31,6 +31,8 @@ function initApp() {
   UI.setActiveTab('produk');
   bindTabInteractions();
   bindNavigationShortcuts();
+  bindMarketingInteractions();
+  bindDemoGate();
 }
 
 function bindTabInteractions() {
@@ -48,6 +50,8 @@ function bindNavigationShortcuts() {
   const navLoginBtn = document.getElementById('navLoginBtn');
   const navRegisterBtn = document.getElementById('navRegisterBtn');
   const heroDemoBtn = document.getElementById('heroDemoBtn');
+  const panelLoginBtn = document.getElementById('panelLoginBtn');
+  const panelRegisterBtn = document.getElementById('panelRegisterBtn');
 
   if (navLoginBtn) {
     navLoginBtn.addEventListener('click', () => {
@@ -64,6 +68,62 @@ function bindNavigationShortcuts() {
   if (heroDemoBtn) {
     heroDemoBtn.addEventListener('click', () => {
       document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  if (panelLoginBtn) {
+    panelLoginBtn.addEventListener('click', () => {
+      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
+      UI.showToast('Panel login ditekan', 'info');
+    });
+  }
+
+  if (panelRegisterBtn) {
+    panelRegisterBtn.addEventListener('click', () => {
+      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
+      UI.showToast('Panel register dibuka', 'info');
+    });
+  }
+}
+
+function bindMarketingInteractions() {
+  console.log('bindMarketingInteractions() called');
+  const pricingButtons = document.querySelectorAll('[data-plan]');
+  const contactForm = document.getElementById('contactForm');
+
+  pricingButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      console.log('Pricing selected:', button.dataset.plan);
+      UI.showToast(`Paket ${button.dataset.plan} dipilih (dummy)`, 'info');
+    });
+  });
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const contactData = Object.fromEntries(new FormData(contactForm));
+      console.log('contactForm submitted:', contactData);
+      UI.showToast('Pesan contact dikirim (dummy)', 'success');
+    });
+  }
+}
+
+function bindDemoGate() {
+  console.log('bindDemoGate() called');
+  const guardLoginBtn = document.getElementById('guardLoginBtn');
+  const guardPeekBtn = document.getElementById('guardPeekBtn');
+
+  if (guardLoginBtn) {
+    guardLoginBtn.addEventListener('click', () => {
+      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
+      UI.showToast('Mulai login sebelum akses demo', 'warning');
+    });
+  }
+
+  if (guardPeekBtn) {
+    guardPeekBtn.addEventListener('click', () => {
+      UI.toggleDemoAccess(true);
+      UI.showToast('Preview demo dibuka (dummy)', 'info');
     });
   }
 }

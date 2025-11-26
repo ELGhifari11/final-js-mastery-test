@@ -3,7 +3,11 @@
  */
 export function showToast(message, type) {
   console.log('showToast() called with:', { message, type });
-  // TODO
+  // TODO: tampilkan toast visual
+  const body = document.body;
+  if (body) {
+    body.dataset.toast = `${type || 'info'}: ${message}`;
+  }
 }
 
 /**
@@ -36,6 +40,16 @@ export function toggleAuthUI(isLoggedIn, user) {
   if (activeUserEl) {
     activeUserEl.textContent = isLoggedIn && user ? user.email || 'user@poslite.app' : 'guest@poslite.app';
   }
+
+  const body = document.body;
+  if (body) {
+    body.classList.toggle('is-authenticated', Boolean(isLoggedIn));
+  }
+
+  const gate = document.getElementById('demoGate');
+  if (gate) {
+    gate.setAttribute('data-status', isLoggedIn ? 'opened' : 'locked');
+  }
 }
 
 /**
@@ -45,4 +59,16 @@ export function formatCurrency(value) {
   console.log('formatCurrency() called with:', value);
   // TODO
   return `Rp${value || 0}`;
+}
+
+/**
+ * Mengatur overlay akses demo (gate) secara manual.
+ */
+export function toggleDemoAccess(isOpen) {
+  console.log('toggleDemoAccess() called with:', isOpen);
+  // TODO: kontrol overlay
+  const body = document.body;
+  if (body) {
+    body.classList.toggle('is-authenticated', Boolean(isOpen));
+  }
 }
