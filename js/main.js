@@ -1,134 +1,41 @@
-import * as Auth from './auth.js';
-import * as Products from './products.js';
-import * as Transactions from './transactions.js';
-import * as Reports from './reports.js';
-import * as Api from './api.js';
-import * as UI from './ui.js';
+import { initAuthFlow, isAuthenticated, logoutUser } from './auth.js';
+import { initPosApp, loadInitialPosData } from './pos.js';
+import { getCurrentUser } from './storage.js';
+import { switchToMainAppView, switchToWelcomeView, showNotification } from './utils.js';
 
-/**
- * Flow utama aplikasi POS:
- * 1. Inisialisasi modul Auth
- * 2. Inisialisasi modul Produk
- * 3. Inisialisasi modul Transaksi
- * 4. Inisialisasi modul Laporan
- * 5. (Opsional) Fetch data awal dari API
- * 6. Atur tab default di Demo POS
- */
+let posInitialized = false;
+
 function initApp() {
-  console.log('initApp() called');
-
-  Auth.initAuthListeners();
-  Products.initProductModule();
-  Transactions.initTransactionModule();
-  Reports.initReportModule();
-
-  // Contoh flow panggilan awal:
-  // Api.fetchExchangeRate().then(rate => {
-  //   console.log('Initial exchange rate:', rate);
-  // });
-
-  // Set tab default
-  UI.setActiveTab('produk');
-  bindTabInteractions();
-  bindNavigationShortcuts();
-  bindMarketingInteractions();
-  bindDemoGate();
-}
-
-function bindTabInteractions() {
-  console.log('bindTabInteractions() called');
-  const tabButtons = document.querySelectorAll('.tab-btn');
-  tabButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      UI.setActiveTab(button.dataset.tab);
-    });
-  });
-}
-
-function bindNavigationShortcuts() {
-  console.log('bindNavigationShortcuts() called');
-  const navLoginBtn = document.getElementById('navLoginBtn');
-  const navRegisterBtn = document.getElementById('navRegisterBtn');
-  const heroDemoBtn = document.getElementById('heroDemoBtn');
-  const panelLoginBtn = document.getElementById('panelLoginBtn');
-  const panelRegisterBtn = document.getElementById('panelRegisterBtn');
-
-  if (navLoginBtn) {
-    navLoginBtn.addEventListener('click', () => {
-      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
-    });
+  initAuthFlow(handleAuthenticated);
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => logoutUser());
   }
 
-  if (navRegisterBtn) {
-    navRegisterBtn.addEventListener('click', () => {
-      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
-  if (heroDemoBtn) {
-    heroDemoBtn.addEventListener('click', () => {
-      document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
-    });
-  }
-
-  if (panelLoginBtn) {
-    panelLoginBtn.addEventListener('click', () => {
-      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
-      UI.showToast('Panel login ditekan', 'info');
-    });
-  }
-
-  if (panelRegisterBtn) {
-    panelRegisterBtn.addEventListener('click', () => {
-      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
-      UI.showToast('Panel register dibuka', 'info');
-    });
+  if (isAuthenticated()) {
+    const user = getCurrentUser();
+    switchToMainAppView(user);
+    ensurePosReady();
+  } else {
+    switchToWelcomeView();
   }
 }
 
-function bindMarketingInteractions() {
-  console.log('bindMarketingInteractions() called');
-  const pricingButtons = document.querySelectorAll('[data-plan]');
-  const contactForm = document.getElementById('contactForm');
-
-  pricingButtons.forEach((button) => {
-    button.addEventListener('click', () => {
-      console.log('Pricing selected:', button.dataset.plan);
-      UI.showToast(`Paket ${button.dataset.plan} dipilih (dummy)`, 'info');
-    });
-  });
-
-  if (contactForm) {
-    contactForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const contactData = Object.fromEntries(new FormData(contactForm));
-      console.log('contactForm submitted:', contactData);
-      UI.showToast('Pesan contact dikirim (dummy)', 'success');
-    });
+function handleAuthenticated() {
+  const user = getCurrentUser();
+  if (user) {
+    switchToMainAppView(user);
+    ensurePosReady();
+    showNotification('Dashboard terbuka');
   }
 }
 
-function bindDemoGate() {
-  console.log('bindDemoGate() called');
-  const guardLoginBtn = document.getElementById('guardLoginBtn');
-  const guardPeekBtn = document.getElementById('guardPeekBtn');
-
-  if (guardLoginBtn) {
-    guardLoginBtn.addEventListener('click', () => {
-      document.getElementById('auth').scrollIntoView({ behavior: 'smooth' });
-      UI.showToast('Mulai login sebelum akses demo', 'warning');
-    });
-  }
-
-  if (guardPeekBtn) {
-    guardPeekBtn.addEventListener('click', () => {
-      UI.toggleDemoAccess(true);
-      UI.showToast('Preview demo dibuka (dummy)', 'info');
-    });
+function ensurePosReady() {
+  loadInitialPosData();
+  if (!posInitialized) {
+    initPosApp();
+    posInitialized = true;
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOMContentLoaded event fired');
-  initApp();
-});
+document.addEventListener('DOMContentLoaded', initApp);

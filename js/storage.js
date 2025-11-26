@@ -1,56 +1,146 @@
-/**
- * Mengambil daftar user dari storage.
- * @returns {Array}
- */
-export function getUsers() {
-  console.log('getUsers() called');
-  // TODO: return list of users from storage
-  return [];
+const USERS_KEY = 'pos_users';
+const CURRENT_USER_KEY = 'pos_current_user';
+const POS_STATE_KEY = 'pos_state';
+
+function loadFromStorage(key, fallback) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) {
+      return fallback;
+    }
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error('loadFromStorage error', error);
+    return fallback;
+  }
 }
 
-/**
- * Menyimpan daftar user ke storage.
- * @param {Array} users
- */
-export function saveUsers(users) {
-  console.log('saveUsers() called with:', users);
-  // TODO: save users to storage
+function saveToStorage(key, value) {
+  try {
+    const serialized = JSON.stringify(value);
+    localStorage.setItem(key, serialized);
+  } catch (error) {
+    console.error('saveToStorage error', error);
+  }
 }
 
-export function getCurrentUser() {
-  console.log('getCurrentUser() called');
-  // TODO
-  return null;
+// User helpers
+function getAllUsers() {
+  return loadFromStorage(USERS_KEY, []);
 }
 
-export function setCurrentUser(user) {
-  console.log('setCurrentUser() called with:', user);
-  // TODO
+function saveAllUsers(users) {
+  saveToStorage(USERS_KEY, users);
 }
 
-export function clearCurrentUser() {
-  console.log('clearCurrentUser() called');
-  // TODO
+function findUserByEmail(email) {
+  const users = getAllUsers();
+  return users.find((user) => user.email === email) || null;
 }
 
-export function getProducts() {
-  console.log('getProducts() called');
-  // TODO
-  return [];
+function addUser(user) {
+  const users = getAllUsers();
+  users.push(user);
+  saveAllUsers(users);
 }
 
-export function saveProducts(products) {
-  console.log('saveProducts() called with:', products);
-  // TODO
+function setCurrentUser(user) {
+  saveToStorage(CURRENT_USER_KEY, user);
 }
 
-export function getTransactions() {
-  console.log('getTransactions() called');
-  // TODO
-  return [];
+function getCurrentUser() {
+  return loadFromStorage(CURRENT_USER_KEY, null);
 }
 
-export function saveTransactions(transactions) {
-  console.log('saveTransactions() called with:', transactions);
-  // TODO
+function clearCurrentUser() {
+  localStorage.removeItem(CURRENT_USER_KEY);
 }
+
+// POS state helpers
+function getPosState() {
+  const defaultState = { products: [], transactions: [] };
+  return loadFromStorage(POS_STATE_KEY, defaultState);
+}
+
+function savePosState(state) {
+  saveToStorage(POS_STATE_KEY, state);
+}
+
+function getAllProducts() {
+  const state = getPosState();
+  return state.products || [];
+}
+
+function saveAllProducts(products) {
+  const state = getPosState();
+  state.products = products;
+  savePosState(state);
+}
+
+function findProductById(id) {
+  const products = getAllProducts();
+  return products.find((product) => product.id === id) || null;
+}
+
+function addProduct(product) {
+  const products = getAllProducts();
+  products.push(product);
+  saveAllProducts(products);
+}
+
+function updateProductById(id, updatedData) {
+  const products = getAllProducts();
+  const updatedProducts = products.map((product) => {
+    if (product.id === id) {
+      return { ...product, ...updatedData };
+    }
+    return product;
+  });
+  saveAllProducts(updatedProducts);
+}
+
+function deleteProductById(id) {
+  const products = getAllProducts();
+  const filtered = products.filter((product) => product.id !== id);
+  saveAllProducts(filtered);
+}
+
+function getAllTransactions() {
+  const state = getPosState();
+  return state.transactions || [];
+}
+
+function saveAllTransactions(transactions) {
+  const state = getPosState();
+  state.transactions = transactions;
+  savePosState(state);
+}
+
+function addTransaction(transaction) {
+  const transactions = getAllTransactions();
+  transactions.push(transaction);
+  saveAllTransactions(transactions);
+}
+
+export {
+  loadFromStorage,
+  saveToStorage,
+  getAllUsers,
+  saveAllUsers,
+  findUserByEmail,
+  addUser,
+  setCurrentUser,
+  getCurrentUser,
+  clearCurrentUser,
+  getPosState,
+  savePosState,
+  getAllProducts,
+  saveAllProducts,
+  findProductById,
+  addProduct,
+  updateProductById,
+  deleteProductById,
+  getAllTransactions,
+  saveAllTransactions,
+  addTransaction,
+};

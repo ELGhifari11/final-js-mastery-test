@@ -1,119 +1,149 @@
-import * as Storage from './storage.js';
-import * as UI from './ui.js';
+import {
+  findUserByEmail,
+  addUser,
+  setCurrentUser,
+  getCurrentUser,
+  clearCurrentUser,
+} from './storage.js';
+import {
+  generateId,
+  showNotification,
+  openModal,
+  closeModal,
+  switchToMainAppView,
+  switchToWelcomeView,
+} from './utils.js';
 
-/**
- * Menghubungkan form login & register dengan handler JS.
- * Dipanggil dari main.js saat initApp.
- */
-export function initAuthListeners() {
-  console.log('initAuthListeners() called');
-  // TODO: addEventListener ke form login & register
+function initAuthFlow(onAuthenticated) {
+  const loginButtons = [
+    document.getElementById('welcomeLoginBtn'),
+    document.getElementById('ctaLoginBtn'),
+  ];
+  const registerButtons = [
+    document.getElementById('welcomeRegisterBtn'),
+    document.getElementById('ctaRegisterBtn'),
+  ];
+
+  loginButtons.forEach((btn) => {
+    if (btn) {
+      btn.addEventListener('click', () => openModal('login-modal'));
+    }
+  });
+
+  registerButtons.forEach((btn) => {
+    if (btn) {
+      btn.addEventListener('click', () => openModal('register-modal'));
+    }
+  });
+
+  const closeButtons = document.querySelectorAll('[data-close]');
+  closeButtons.forEach((btn) => {
+    btn.addEventListener('click', () => closeModal(btn.dataset.close));
+  });
+
+  const loginToRegister = document.getElementById('loginToRegister');
+  const registerToLogin = document.getElementById('registerToLogin');
+  if (loginToRegister) {
+    loginToRegister.addEventListener('click', () => {
+      closeModal('login-modal');
+      openModal('register-modal');
+    });
+  }
+  if (registerToLogin) {
+    registerToLogin.addEventListener('click', () => {
+      closeModal('register-modal');
+      openModal('login-modal');
+    });
+  }
+
   const loginForm = document.getElementById('loginForm');
-  const registerForm = document.getElementById('registerForm');
-  const logoutBtn = document.getElementById('logoutBtn');
-  const passwordForm = document.getElementById('passwordForm');
-  const refreshSessionBtn = document.getElementById('refreshSessionBtn');
-
   if (loginForm) {
     loginForm.addEventListener('submit', (event) => {
       event.preventDefault();
-      const formData = Object.fromEntries(new FormData(loginForm));
-      console.log('loginForm submitted with data:', formData);
-      handleLogin(formData);
+      const formData = new FormData(loginForm);
+      loginUser({
+        email: formData.get('email')?.trim(),
+        password: formData.get('password')?.trim(),
+      }, onAuthenticated);
     });
   }
 
+  const registerForm = document.getElementById('registerForm');
   if (registerForm) {
     registerForm.addEventListener('submit', (event) => {
       event.preventDefault();
-      const formData = Object.fromEntries(new FormData(registerForm));
-      console.log('registerForm submitted with data:', formData);
-      handleRegister(formData);
-    });
-  }
-
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      handleLogout();
-    });
-  }
-
-  if (passwordForm) {
-    passwordForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const data = Object.fromEntries(new FormData(passwordForm));
-      console.log('passwordForm submitted:', data);
-      UI.showToast('Ganti password (dummy)', 'info');
-      UI.toggleAuthUI(isAuthenticated(), Storage.getCurrentUser());
-    });
-  }
-
-  if (refreshSessionBtn) {
-    refreshSessionBtn.addEventListener('click', () => {
-      console.log('refreshSessionBtn clicked');
-      UI.showToast('Session dicek ulang (dummy)', 'info');
-      UI.toggleAuthUI(isAuthenticated(), Storage.getCurrentUser());
+      const formData = new FormData(registerForm);
+      registerUser({
+        name: formData.get('name')?.trim(),
+        email: formData.get('email')?.trim(),
+        password: formData.get('password')?.trim(),
+        confirmPassword: formData.get('confirmPassword')?.trim(),
+      }, onAuthenticated);
     });
   }
 }
 
-/**
- * Flow register:
- * 1. Validasi data
- * 2. Cek email sudah terdaftar?
- * 3. Simpan ke storage via storage.js
- * 4. Tampilkan notifikasi via ui.js
- */
-export function handleRegister(formData) {
-  console.log('handleRegister() called with:', formData);
-  // TODO: implement flow register
-  Storage.getUsers();
-  Storage.saveUsers([]);
-  UI.showToast('Register flow executed', 'success');
-  UI.toggleAuthUI(true, formData);
-  UI.setActiveTab('produk');
-  UI.toggleDemoAccess(true);
+function registerUser(payload, onDone) {
+  if (!payload.name || !payload.email || !payload.password) {
+    showNotification('Lengkapi semua kolom register', true);
+    return;
+  }
+  if (payload.password !== payload.confirmPassword) {
+    showNotification('Password dan konfirmasi tidak sama', true);
+    return;
+  }
+  const existing = findUserByEmail(payload.email);
+  if (existing) {
+    showNotification('Email sudah terdaftar', true);
+    return;
+  }
+  const newUser = {
+    id: generateId(),
+    name: payload.name,
+    email: payload.email,
+    password: payload.password,
+    createdAt: new Date().toISOString(),
+  };
+  addUser(newUser);
+  showNotification('Register berhasil, silakan login');
+  closeModal('register-modal');
+  openModal('login-modal');
+  if (typeof onDone === 'function') {
+    onDone();
+  }
 }
 
-/**
- * Flow login:
- * 1. Ambil users via storage.js
- * 2. Cek email+password
- * 3. Set currentUser via storage.js
- * 4. Update UI via ui.js
- */
-export function handleLogin(formData) {
-  console.log('handleLogin() called with:', formData);
-  // TODO: implement flow login
-  Storage.getUsers();
-  Storage.setCurrentUser(formData);
-  UI.toggleAuthUI(true, formData);
-  UI.toggleDemoAccess(true);
-  UI.setActiveTab('produk');
-  UI.showToast('Login flow executed', 'info');
+function loginUser(payload, onDone) {
+  if (!payload.email || !payload.password) {
+    showNotification('Email dan password wajib diisi', true);
+    return;
+  }
+  const user = findUserByEmail(payload.email);
+  if (!user || user.password !== payload.password) {
+    showNotification('Email atau password salah', true);
+    return;
+  }
+  setCurrentUser(user);
+  closeModal('login-modal');
+  switchToMainAppView(user);
+  showNotification(`Selamat datang, ${user.name}`);
+  if (typeof onDone === 'function') {
+    onDone();
+  }
 }
 
-/**
- * Flow logout:
- * 1. clearCurrentUser via storage.js
- * 2. Update UI ke guest via ui.js
- */
-export function handleLogout() {
-  console.log('handleLogout() called');
-  // TODO
-  Storage.clearCurrentUser();
-  UI.toggleAuthUI(false, null);
-  UI.toggleDemoAccess(false);
-  UI.setActiveTab('produk');
-  UI.showToast('Logout flow executed', 'info');
+function logoutUser(onDone) {
+  clearCurrentUser();
+  switchToWelcomeView();
+  showNotification('Berhasil logout');
+  if (typeof onDone === 'function') {
+    onDone();
+  }
 }
 
-/**
- * Mengecek apakah user sudah login.
- */
-export function isAuthenticated() {
-  console.log('isAuthenticated() called');
-  // TODO: return boolean
-  const user = Storage.getCurrentUser();
+function isAuthenticated() {
+  const user = getCurrentUser();
   return Boolean(user);
 }
+
+export { initAuthFlow, registerUser, loginUser, logoutUser, isAuthenticated };
