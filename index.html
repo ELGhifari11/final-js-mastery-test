@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POSLite - Modern POS Landing</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="logo">POSLite</div>
+      <nav class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#features">Fitur</a>
+        <a href="#demo">Demo POS</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn ghost" id="navLoginBtn">Login</button>
+        <button class="btn primary" id="navRegisterBtn">Daftar</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-ornament"></div>
+      <div class="hero-content">
+        <div class="hero-text">
+          <p class="eyebrow">Point of Sale for Small Business & Education</p>
+          <h1>Modern POS System for Small Business & Education</h1>
+          <p class="subtitle">
+            Kelola produk, transaksi, dan laporan dengan alur sederhana. Cocok untuk simulasi UMKM, sekolah, atau kursus
+            digital.
+          </p>
+          <div class="cta-group">
+            <a class="btn primary" href="#demo" id="heroDemoBtn">Coba Demo POS</a>
+            <a class="btn secondary" href="#auth">Daftar Akun</a>
+          </div>
+          <div class="pill-group">
+            <span class="pill">CRUD Produk</span>
+            <span class="pill">Transaksi & Laporan</span>
+            <span class="pill">Offline Ready</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="mockup">
+            <div class="mockup-header">
+              <div>
+                <p class="small">Kasir Hari Ini</p>
+                <strong>POSLite Flow</strong>
+              </div>
+              <span class="status">Online</span>
+            </div>
+            <div class="mockup-body">
+              <div class="mockup-item">
+                <div>
+                  <p class="label">Cappuccino</p>
+                  <p class="small">x2</p>
+                </div>
+                <p class="amount">Rp48.000</p>
+              </div>
+              <div class="mockup-item">
+                <div>
+                  <p class="label">Croissant</p>
+                  <p class="small">x1</p>
+                </div>
+                <p class="amount">Rp19.000</p>
+              </div>
+              <div class="mockup-summary">
+                <span>Total</span>
+                <strong>Rp67.000</strong>
+              </div>
+            </div>
+            <div class="mockup-footer">
+              <p class="small">Flow Demo</p>
+              <p class="label">Login → Produk → Transaksi → Laporan</p>
+            </div>
+          </div>
+          <div class="hero-panel">
+            <div class="panel-header">
+              <p class="eyebrow">Quick Auth</p>
+              <p class="badge">Live Preview</p>
+            </div>
+            <p class="subtitle">Mulai dari login atau buat akun baru untuk membuka Demo POS.</p>
+            <div class="panel-actions">
+              <button class="btn primary" id="panelLoginBtn">Masuk Cepat</button>
+              <button class="btn ghost" id="panelRegisterBtn">Buat Akun</button>
+            </div>
+            <div class="panel-steps">
+              <div>
+                <p class="small">01</p>
+                <p class="label">Register / Login</p>
+              </div>
+              <div>
+                <p class="small">02</p>
+                <p class="label">Kelola Produk</p>
+              </div>
+              <div>
+                <p class="small">03</p>
+                <p class="label">Catat Transaksi</p>
+              </div>
+              <div>
+                <p class="small">04</p>
+                <p class="label">Lihat Laporan</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section features" id="features">
+      <div class="section-header">
+        <p class="eyebrow">Fitur Utama</p>
+        <h2>Tools lengkap untuk operasional kasir</h2>
+        <p class="subtitle">Semua modul yang kamu perlukan untuk belajar dan mensimulasikan POS modern.</p>
+      </div>
+      <div class="feature-grid">
+        <div class="card feature-card">
+          <div class="icon">📦</div>
+          <h3>Manajemen Produk (CRUD)</h3>
+          <p>Tambah, edit, dan hapus produk dengan atribut kategori, harga, dan stok.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="icon">💳</div>
+          <h3>Manajemen Transaksi</h3>
+          <p>Simulasi tambah ke keranjang, hitung total, dan simpan transaksi.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="icon">📈</div>
+          <h3>Laporan Penjualan</h3>
+          <p>Pantau total transaksi, omzet, dan filter berdasarkan tanggal.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="icon">👥</div>
+          <h3>Multi User</h3>
+          <p>Alur register, login, dan logout sederhana untuk simulasi multi kasir.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="icon">💾</div>
+          <h3>LocalStorage Ready</h3>
+          <p>Siap dihubungkan ke penyimpanan lokal agar tetap berjalan secara offline.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="icon">🧭</div>
+          <h3>Flow Terpandu</h3>
+          <p>UI interaktif yang menuntun login → produk → transaksi → laporan.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section demo" id="demo">
+      <div class="section-header">
+        <p class="eyebrow">Demo POS</p>
+        <h2>Praktik langsung alur kasir</h2>
+        <p class="subtitle">Klik tiap tab untuk melihat alur modular: produk, transaksi, laporan, dan akun.</p>
+      </div>
+      <div class="demo-gate" id="demoGate">
+        <div>
+          <p class="eyebrow">Starter Flow</p>
+          <h3>Mulai dengan Login atau Register</h3>
+          <p class="subtitle">Dummy gate yang memastikan alur dimulai dari autentikasi sebelum masuk ke menu utama.</p>
+          <div class="cta-group">
+            <button class="btn primary" id="guardLoginBtn">Login untuk Buka Demo</button>
+            <button class="btn secondary" id="guardPeekBtn">Lihat Preview</button>
+          </div>
+        </div>
+      </div>
+      <div class="demo-layout">
+        <aside class="tabs">
+          <button class="tab-btn active" data-tab="produk">Produk</button>
+          <button class="tab-btn" data-tab="transaksi">Transaksi</button>
+          <button class="tab-btn" data-tab="laporan">Laporan</button>
+          <button class="tab-btn" data-tab="akun">Pengaturan Akun</button>
+        </aside>
+        <div class="tab-contents">
+          <div class="tab-content active" id="tab-produk">
+            <div class="card form-card">
+              <div class="card-head">
+                <div>
+                  <p class="eyebrow">Produk</p>
+                  <h3>Tambah / Edit Produk</h3>
+                </div>
+                <span class="badge ghost">CRUD</span>
+              </div>
+              <form id="productForm" class="form-grid">
+                <input type="text" name="name" placeholder="Nama Produk" required />
+                <input type="text" name="category" placeholder="Kategori" />
+                <input type="number" name="price" placeholder="Harga" />
+                <input type="number" name="stock" placeholder="Stok" />
+                <div class="form-actions">
+                  <button type="submit" class="btn primary">Simpan Produk</button>
+                  <button type="button" class="btn ghost" id="resetProductBtn">Reset</button>
+                </div>
+              </form>
+            </div>
+            <div class="card table-card">
+              <div class="table-header">
+                <h3>Daftar Produk</h3>
+                <div class="table-actions">
+                  <button class="btn secondary" id="editProductBtn">Edit</button>
+                  <button class="btn ghost" id="deleteProductBtn">Delete</button>
+                </div>
+              </div>
+              <table class="data-table" id="productTable">
+                <thead>
+                  <tr>
+                    <th>Nama</th>
+                    <th>Kategori</th>
+                    <th>Harga</th>
+                    <th>Stok</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Latte</td>
+                    <td>Minuman</td>
+                    <td>Rp25.000</td>
+                    <td>24</td>
+                  </tr>
+                  <tr>
+                    <td>Bolu</td>
+                    <td>Snack</td>
+                    <td>Rp18.000</td>
+                    <td>12</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-transaksi">
+            <div class="card form-card">
+              <div class="card-head">
+                <div>
+                  <p class="eyebrow">Keranjang</p>
+                  <h3>Tambah ke Keranjang</h3>
+                </div>
+                <span class="badge ghost">Cart</span>
+              </div>
+              <form id="cartForm" class="form-grid">
+                <select name="product" required>
+                  <option value="">Pilih Produk</option>
+                  <option value="1">Latte</option>
+                  <option value="2">Bolu</option>
+                </select>
+                <input type="number" name="qty" placeholder="Qty" min="1" />
+                <div class="form-actions">
+                  <button type="submit" class="btn primary">Tambah</button>
+                  <button type="button" class="btn ghost" id="clearCartBtn">Reset</button>
+                </div>
+              </form>
+            </div>
+            <div class="card table-card">
+              <div class="table-header">
+                <h3>Keranjang</h3>
+                <div class="table-actions">
+                  <button class="btn secondary" id="removeCartItemBtn">Hapus Item</button>
+                </div>
+              </div>
+              <table class="data-table" id="cartTable">
+                <thead>
+                  <tr>
+                    <th>Produk</th>
+                    <th>Qty</th>
+                    <th>Harga</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Latte</td>
+                    <td>2</td>
+                    <td>Rp25.000</td>
+                    <td>Rp50.000</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="summary">
+                <p>Total Qty: <span id="totalQty">2</span></p>
+                <p>Total Harga: <span id="totalAmount">Rp50.000</span></p>
+                <button class="btn primary" id="saveTransactionBtn">Simpan Transaksi</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-laporan">
+            <div class="card form-card">
+              <div class="card-head">
+                <div>
+                  <p class="eyebrow">Ringkasan</p>
+                  <h3>Filter Tanggal</h3>
+                </div>
+                <span class="badge ghost">Report</span>
+              </div>
+              <form id="reportFilterForm" class="form-grid">
+                <input type="date" name="start" />
+                <input type="date" name="end" />
+                <div class="form-actions">
+                  <button type="submit" class="btn primary">Filter</button>
+                  <button type="button" class="btn ghost" id="resetReportBtn">Reset</button>
+                </div>
+              </form>
+            </div>
+            <div class="card table-card">
+              <div class="table-header">
+                <h3>Daftar Transaksi</h3>
+              </div>
+              <table class="data-table" id="reportTable">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Tanggal</th>
+                    <th>Total Item</th>
+                    <th>Omzet</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>#INV-001</td>
+                    <td>2024-01-15</td>
+                    <td>3</td>
+                    <td>Rp120.000</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="summary">
+                <p>Total Transaksi: <span id="reportTotal">1</span></p>
+                <p>Total Omzet: <span id="reportRevenue">Rp120.000</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-akun">
+            <div class="card form-card">
+              <div class="card-head">
+                <div>
+                  <p class="eyebrow">Akun</p>
+                  <h3>Pengaturan Akun</h3>
+                </div>
+                <span class="badge ghost">Session</span>
+              </div>
+              <div class="account-info">
+                <p>User Aktif: <span id="activeUser">guest@poslite.app</span></p>
+                <div class="table-actions">
+                  <button class="btn secondary" id="logoutBtn">Logout</button>
+                  <button class="btn ghost" id="refreshSessionBtn">Refresh Session</button>
+                </div>
+              </div>
+              <form id="passwordForm" class="form-grid">
+                <input type="password" name="password" placeholder="Password baru" />
+                <input type="password" name="confirmPassword" placeholder="Konfirmasi password" />
+                <div class="form-actions">
+                  <button type="submit" class="btn primary">Ganti Password</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section auth" id="auth">
+      <div class="section-header">
+        <p class="eyebrow">Autentikasi</p>
+        <h2>Login & Register</h2>
+        <p class="subtitle">Coba alur multi user untuk tim kasir.</p>
+      </div>
+      <div class="auth-grid">
+        <div class="card form-card">
+          <h3>Login</h3>
+          <form id="loginForm" class="form-column">
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <button type="submit" class="btn primary">Login</button>
+          </form>
+          <p class="helper-text">Belum punya akun? Register di kartu sebelah.</p>
+        </div>
+        <div class="card form-card">
+          <h3>Register</h3>
+          <form id="registerForm" class="form-column">
+            <input type="text" name="name" placeholder="Nama" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="password" name="password" placeholder="Password" required />
+            <input type="password" name="confirmPassword" placeholder="Konfirmasi Password" required />
+            <button type="submit" class="btn secondary">Daftar</button>
+          </form>
+          <p class="helper-text">Flow dummy: submit untuk membuka akses Demo POS.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section pricing" id="pricing">
+      <div class="section-header">
+        <p class="eyebrow">Pricing</p>
+        <h2>Pilih paket sesuai kebutuhan</h2>
+        <p class="subtitle">Mulai dari free untuk belajar hingga pro untuk produksi.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="card pricing-card">
+          <h3>Free</h3>
+          <p class="price">Rp0</p>
+          <ul>
+            <li>Basic CRUD produk</li>
+            <li>Simulasi transaksi</li>
+            <li>Laporan dasar</li>
+          </ul>
+          <button class="btn secondary" data-plan="Free">Pilih Free</button>
+        </div>
+        <div class="card pricing-card highlight">
+          <h3>Edu</h3>
+          <p class="price">Rp79.000</p>
+          <ul>
+            <li>Semua fitur Free</li>
+            <li>Template tugas & modul</li>
+            <li>Support instructor</li>
+          </ul>
+          <button class="btn primary" data-plan="Edu">Pilih Edu</button>
+        </div>
+        <div class="card pricing-card">
+          <h3>Pro</h3>
+          <p class="price">Rp199.000</p>
+          <ul>
+            <li>Multi user & roles</li>
+            <li>Integrasi API</li>
+            <li>Backup & analitik</li>
+          </ul>
+          <button class="btn secondary" data-plan="Pro">Pilih Pro</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq" id="faq">
+      <div class="section-header">
+        <p class="eyebrow">FAQ</p>
+        <h2>Pertanyaan populer</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h4>Apa tujuan POSLite?</h4>
+          <p>Untuk latihan simulasi kasir modern, cocok untuk pelajar, bootcamp, dan UMKM yang ingin mencoba POS.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Apakah data tersimpan?</h4>
+          <p>Kami siapkan skeleton untuk LocalStorage, sehingga bisa dihubungkan dengan mudah.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Apakah ada API?</h4>
+          <p>Modul API disiapkan untuk fetch produk dummy atau kurs, tinggal diaktifkan sesuai kebutuhan.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="contact-grid">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>Hubungi tim kami</h2>
+          <p class="subtitle">Kirim pesan untuk demo lanjutan atau kolaborasi.</p>
+          <ul class="contact-info">
+            <li>Email: hello@poslite.app</li>
+            <li>Telepon: +62 812 3456 7890</li>
+            <li>Alamat: Remote-first, Indonesia</li>
+          </ul>
+        </div>
+        <div class="card form-card">
+          <h3>Kirim Pesan</h3>
+          <form id="contactForm" class="form-column">
+            <input type="text" name="name" placeholder="Nama" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <textarea name="message" placeholder="Pesan" rows="4"></textarea>
+            <button type="submit" class="btn primary">Kirim</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 POSLite. Built for learning & simulation.</p>
+    <div class="socials">
+      <a href="#">LinkedIn</a>
+      <a href="#">GitHub</a>
+      <a href="#">Dribbble</a>
+    </div>
+  </footer>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
